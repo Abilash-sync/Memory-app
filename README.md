@@ -5,8 +5,6 @@ A basic memory card-matching game built with **React + Vite**.
 **Features:**
 - 4×4 grid of emoji cards (8 pairs)
 - Move counter and match counter
-- **Elapsed-time timer**
-- **Best-runs leaderboard (top 5, persisted in localStorage)**
 - "New Game" button reshuffles the deck
 - Win message when all pairs are matched
 
