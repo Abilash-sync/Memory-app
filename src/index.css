@@ -18,7 +18,7 @@ h1 { margin: 0 0 0.5rem; }
   font-size: 1rem;
   color: #374151;
 }
-.info b { color: #4f46e5; }
+.info b { color: #4f46e5; font-variant-numeric: tabular-nums; }
 .board {
   display: grid;
   grid-template-columns: repeat(4, 80px);
@@ -67,4 +67,31 @@ button.restart:hover { background: #4338ca; }
   font-size: 1.2rem;
   color: #10b981;
   font-weight: 600;
+}
+.leaderboard {
+  margin-top: 1.5rem;
+  width: 100%;
+  max-width: 360px;
+  background: #fff;
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+.leaderboard h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  color: #374151;
+}
+.leaderboard ol {
+  margin: 0;
+  padding-left: 1.4rem;
+  color: #4b5563;
+  font-variant-numeric: tabular-nums;
+}
+.leaderboard li { margin-bottom: 0.25rem; }
+.leaderboard b { color: #4f46e5; }
+.leaderboard .empty {
+  margin: 0;
+  color: #9ca3af;
+  font-size: 0.9rem;
 }
