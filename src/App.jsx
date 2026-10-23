@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import Login from './Login';
 
 const EMOJIS = ['🍎', '🍌', '🍇', '🍓', '🍒', '🥑', '🍉', '🥕'];
 
@@ -22,6 +23,15 @@ function buildDeck() {
 }
 
 export default function App() {
+  const [user, setUser] = useState(() => {
+    try {
+      const savedUser = localStorage.getItem('memory_user');
+      return savedUser ? JSON.parse(savedUser) : null;
+    } catch {
+      return null;
+    }
+  });
+
   const [deck, setDeck] = useState(buildDeck);
   const [picked, setPicked] = useState([]);
   const [moves, setMoves] = useState(0);
@@ -63,13 +73,50 @@ export default function App() {
     setMoves(0);
   }
 
+  function handleLogin(loggedInUser) {
+    setUser(loggedInUser);
+    if (loggedInUser.rememberMe) {
+      localStorage.setItem('memory_user', JSON.stringify(loggedInUser));
+    }
+  }
+
+  function handleLogout() {
+    setUser(null);
+    localStorage.removeItem('memory_user');
+    restart();
+  }
+
+  if (!user) {
+    return (
+      <main className="login-container">
+        <Login onLogin={handleLogin} />
+      </main>
+    );
+  }
+
   const pairs = deck.filter((c) => c.matched).length / 2;
   const won = pairs === EMOJIS.length;
 
   return (
-    <div>
-      <h1>🧠 Memory App Not</h1>
-      <div className="info">
+    <main className="game-container">
+      <header className="game-header">
+        <h1>🧠 Memory App Not</h1>
+        <div className="user-bar">
+          <span className="user-greeting">
+            Player: <strong>{user.username}</strong>
+          </span>
+          <button
+            type="button"
+            className="logout-btn"
+            onClick={handleLogout}
+            aria-label="Sign out"
+          >
+            Sign Out
+          </button>
+        </div>
+      </header>
+
+      <div className="info" role="status" aria-live="polite">
         <div>
           Moves: <b>{moves}</b>
         </div>
@@ -77,7 +124,8 @@ export default function App() {
           Pairs: <b>{pairs}</b> / {EMOJIS.length}
         </div>
       </div>
-      <div className="board">
+
+      <div className="board" role="region" aria-label="Memory Game Board">
         {deck.map((card, i) => (
           <button
             key={card.id}
@@ -87,15 +135,27 @@ export default function App() {
               (card.matched ? ' matched' : '')
             }
             onClick={() => flip(i)}
+            aria-label={
+              card.flipped || card.matched
+                ? `Card at position ${i + 1}, ${card.emoji}`
+                : `Card at position ${i + 1}, hidden`
+            }
+            disabled={card.matched}
           >
             {card.flipped || card.matched ? card.emoji : ''}
           </button>
         ))}
       </div>
+
       <button className="restart" onClick={restart}>
         New Game
       </button>
-      {won && <div className="win">🎉 You won in {moves} moves!</div>}
-    </div>
+
+      {won && (
+        <div className="win" role="alert" aria-live="assertive">
+          🎉 You won in {moves} moves!
+        </div>
+      )}
+    </main>
   );
 }
